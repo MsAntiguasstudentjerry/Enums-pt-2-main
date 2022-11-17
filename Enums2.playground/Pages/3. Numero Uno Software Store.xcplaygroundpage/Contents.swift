@@ -19,7 +19,7 @@
  4. We want a method that prints all available product types. Define a method called displayProductOfferings(). When called it should print "There are {number of products} products": then print all product cases defined in ProductType.
 */
 
-enum productType : String, CaseIterable{
+enum ProductType : String, CaseIterable{
     case aceRepository = "Ace Repository"
     
     case dealForcer = "Deal Forcer"
@@ -28,23 +28,21 @@ enum productType : String, CaseIterable{
     
     case mailCannon = "Mail Cannon"
     
-    func displayProductOfferings(){
-        
-        var count = 0
-        for i in productType.allCases{
-            
-            print(i)
-            count += 1
-        }
-        
-        print("There are \(count) products")
-        
-    }
+ 
     
 }
-
-
-
+func displayProductOfferings(){
+    
+    var count = 0
+    for i in ProductType.allCases{
+        
+        print(i)
+        count += 1
+    }
+    
+    print("There are \(count) products")
+    
+}
 
 
 /*:
@@ -52,25 +50,46 @@ enum productType : String, CaseIterable{
  6. We want to define three cases of Edition: basic, premium, and ‘ultimate`. We’ll set the raw value equal to the case name.
  7. Let’s create a mutating method upgrade() that sets its own value one step higher unless it is the highest edition, in which case it should print "Can’t upgrade further to the console." For example, if an instance of Edition is set to the basic case, upgrade() should set the instance to case premium.
  */
-
-
-
-
-
-
+enum Edition : String {
+    case basic = "basic"
+    case premium = "premium"
+    case ultimate = "ultimate"
+    
+    mutating func upgrade() {
+        switch self{
+            
+        case .basic:
+            self = .premium
+        case .premium:
+            self = .ultimate
+        case .ultimate:
+            print("Can't upgrade further to the console")
+            
+        }
+    }
+}
 /*:
  8. We need to deliver the actual software to the customer. Let’s create an enumeration called DeliveryMethod to represent the options a customer has for delivery.
  9. We’ll create two cases with associated values to represent the different delivery types. Create one case called cloudDigital that has an associated Bool value called isLifetime. Create another case called shipping that has an associated Int value called weight.
  10. We’ll use a computed property to calculate the shipping cost incurred by a software order. Create a computed Int property called shippingCost that is equal to the weight multiplied by 2 in the case that the delivery method is shipping. If the delivery method is cloudDigital, shippingCost should be 0.
  */
-
-
-
-
-
-
-
-
+enum DeliveryMethod{
+    case cloudDigital(isLifetime: Bool)
+    case shipping(weight: Int)
+    
+    var shippingCost: Int
+    {
+        switch self
+        {
+        case .shipping(let weight):
+            return weight * 2
+        case .cloudDigital:
+            return 0
+        }
+        
+        
+    }
+}
 /*:
  a. Now that we have all of the enumerations we’ll need, let’s make a method that sends a descriptive order confirmation to the customer. Define a method called sendOrderConfirmation that has the following three arguments:
 
@@ -83,7 +102,31 @@ d.  If the shipping method is cloudDigital we want to then check the associated 
 
  */
 
+    func sendOrderConfirmation(of productType: ProductType, in edition:Edition, by deliveryMethod:DeliveryMethod)
+    {
+        print("Thank you for purchasing the {edition’s raw value} edition of {productType’s raw value}")
 
+        switch deliveryMethod{
+        case .shipping:
+            print("Your order will be shipped to you at a cost of \(deliveryMethod.shippingCost)")
+       
+        case .cloudDigital(let isLifeTime):
+            if isLifeTime{
+                print("You have lifetime cloud access.")
+            }
+            
+            else{
+                print("You can access your subscirption information on the cloud")
+            }
+            
+            
+            }
+            
+        }
+        
+        
+        
+    
 
 
 
@@ -93,13 +136,17 @@ d.  If the shipping method is cloudDigital we want to then check the associated 
 /*:
  e. Now let’s see the store in action! Start by calling the displayProductOfferings() method.
  */
-
+    var prod = ProductType.dealForcer
+    print(displayProductOfferings())
 
 
 /*:
 g. Create a variable instance of the Edition enumeration. Name the variable myEdition and set it to the basic case. Then call the upgrade method on that instance.
  */
-
+    var eddy = Edition.basic
+    
+    eddy.upgrade()
+sendOrderConfirmation(of: .aceRepository, in: eddy, by :DeliveryMethod.shipping(weight: 5))
 
 
 
